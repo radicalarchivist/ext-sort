@@ -42,3 +42,6 @@ Move video files recursively to /home/user/Videos and keep the file structure
 
     # Windows
     C:\ext-sort path> C:\Path\to\Python.exe ext-sort -kr -x mp4,mov,avi,mkv C:\some\source\directory C:\home\user\Videos
+
+## Support RadicalArchivist
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/N4N53F7TD)
