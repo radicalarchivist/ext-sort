@@ -1,5 +1,5 @@
 # ext-sort
-A utility that sorts files based on their extension  
+A utility that moves files to a specified directory based on their extension  
 v.0.1  
 2020 by radicalarchivist  
 
