@@ -23,21 +23,21 @@ v.0.1
 
 ### Examples
 
-Move video files to /home/user/Videos
+Move video files to /home/user/Videos  
     # *nix/Mac
     $ ext-sort -x mp4,mov,avi,mkv /some/source/directory /home/user/Videos
 
     # Windows
     C:\ext-sort path> C:\Path\to\Python.exe ext-sort -x mp4,mov,avi,mkv C:\some\source\directory C:\home\user\Videos
 
-Move gifs recursively to /home/user/Pictures/gifs 
+Move gifs recursively to /home/user/Pictures/gifs  
     # *nix/Mac
     $ ext-sort -r -x gif /some/source/directory /home/user/Pictures/gifs
 
     # Windows
     C:\ext-sort path> C:\Path\to\Python.exe ext-sort -k -x gif C:\some\source\directory C:\home\user\Pictures\gifs
 
-Move video files recursively to /home/user/Videos and keep the file structure
+Move video files recursively to /home/user/Videos and keep the file structure  
     # *nix/Mac
     $ ext-sort -kr -x mp4,mov,avi,mkv /some/source/directory /home/user/Videos
 
