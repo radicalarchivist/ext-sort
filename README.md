@@ -1,5 +1,8 @@
 # ext-sort
 
+### Setup
+    $ pip install -r requirements.txt
+
 ## Usage
     ext-sort
     Desc: A utility that sorts files based on their extension
