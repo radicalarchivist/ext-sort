@@ -10,7 +10,7 @@
     2020 by radicalarchivist
 
     Usage:
-      ext-sort [-kr] -x EXTENSION SCAN-DIR TARGET-DIR
+      ext-sort [-ckr] -x EXTENSION SCAN-DIR TARGET-DIR
       ext-sort --help
       ext-sort --version
 
@@ -20,6 +20,7 @@
       -x --extension EXTENSION              extension(s) of the files to move
       -r --recursive                        Scan recursively
       -k --keep-structure                   Retains directory structure when moving
+      -c --cron                             Used when ext-sort is run on a schedule, assumes yes to prompts
       -h --help                             Show this screen
       --version                             Show version info
 
