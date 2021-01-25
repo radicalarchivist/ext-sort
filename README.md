@@ -1,18 +1,15 @@
 # ext-sort
+A utility that sorts files based on their extension  
+v.0.1  
+2020 by radicalarchivist  
 
 ### Setup
     $ pip install -r requirements.txt
 
 ### Usage
-    ext-sort
-    Desc: A utility that sorts files based on their extension
-    v.0.1
-    2020 by radicalarchivist
-
-    Usage:
-      ext-sort [-ckr] -x EXTENSION SCAN-DIR TARGET-DIR
-      ext-sort --help
-      ext-sort --version
+    ext-sort [-ckr] -x EXTENSION SCAN-DIR TARGET-DIR
+    ext-sort --help
+    ext-sort --version
 
     Options:
       SCAN-DIR                              Directory to be scanned
