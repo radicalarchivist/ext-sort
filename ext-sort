@@ -2,7 +2,7 @@
 """
 ext-sort
 Desc: A utility that sorts files based on their extension
-v.0.1
+v.0.3
 2020 by radicalarchivist
 
 Usage:
@@ -44,22 +44,31 @@ Keep File Structure: {args['--keep-structure']}""",flush=True)
 def get_filelist(paths,exts,recurse):
     retlist = {}
     for path in paths:
+        print(f"Scanning {path}",end="...",flush=True)
         retlist[path] = []
         abspath = os.path.abspath(path)
         if not recurse:
-            for item in os.listdir(abspath):
-                if os.path.isdir(os.path.join(path,item)):
-                    continue
-                if item.split('.')[-1] in exts:
-                    retlist[path].append(os.path.join(path,item))
+            try:
+                for item in os.listdir(abspath):
+                    if os.path.isdir(os.path.join(path,item)):
+                        continue
+                    if item.split('.')[-1] in exts:
+                        retlist[path].append(os.path.join(path,item))
+            except Exception:
+                raise
         else:
-            for root,dirs,files in os.walk(abspath):
-                for name in files:
-                    if name.split('.')[-1] in exts:
-                        retlist[path].append(os.path.join(root,name))
+            try:
+                for root,dirs,files in os.walk(abspath):
+                    for name in files:
+                        if name.split('.')[-1] in exts:
+                            retlist[path].append(os.path.join(root,name))
+            except Exception:
+                raise
+        print("Done.",flush=True)
     return retlist
 
 def move_files(filelist,sources,destination,keep_structure):
+    print(f"Moving files to {destination}",end="...",flush=True)
     for source in sources:
         for path in filelist[source]:
             if keep_structure:
@@ -72,15 +81,25 @@ def move_files(filelist,sources,destination,keep_structure):
                 try:
                     os.makedirs(tPath,exist_ok=True)
                 except Exception:
-                    print("Unable to create the target directory. Do you have the correct permissions?")
-                    exit(1)
+                    raise
                 print(f"{path} --> {target}")
                 shutil.move(path,target)
-            except Exception as e:
-                print(f"There was a problem moving the file: {e}")
+            except PermissionError:
+                print(f"Failed. Permission Error.",flush=True)
+                print("Operation Failed.",flush=True)
                 exit(1)
+            except Exception:
+                raise
+    print("Done.",flush=True)
 
-def yn_prompt(prompt: str):
+def count_files(filelist):
+    total = 0
+    for path, filename in filelist.items():
+        total += len(filename)
+    print(f"Found {total} files.",flush=True)
+    return total
+
+def yn_prompt(prompt):
     '''
     Yes or no prompt
     '''
@@ -95,30 +114,22 @@ def yn_prompt(prompt: str):
             else:
                 raise ValueError
         except ValueError:
-            print('You must enter y or n.\n')
+            print('You must enter y or n.',flush=True)
         except IndexError:
             return False
 
 def main(args):
     splash(args)
-    print(f"Scanning",end="...",flush=True)
     filelist = get_filelist(args['SCAN-DIR'],args['--extension'].split(','),args['--recursive'])
-    print("Done.",flush=True)
-    total = 0
-    for path, filename in filelist.items():
-        total += len(filename)
-    if not total:
-        print(f"No files were found with the extension(s): {args['--extension']}",flush=True)
-        exit()
-    print(f"Found {total} files with the extension(s): {args['--extension']}",flush=True)
-    if not args['--cron']:
-        if not yn_prompt(f"Do you wish to move the files to {args['--target']}?"): 
-            print("Operation cancelled.",flush=True)
-            exit()
-    print(f"Moving files to {args['--target']}...",flush=True)
-    move_files(filelist,args['SCAN-DIR'],args['--target'],args['--keep-structure'])
+    if count_files(filelist): 
+        if not args['--cron']:
+            if yn_prompt(f"Do you wish to move the files to {args['--target']}?"): 
+                move_files(filelist,args['SCAN-DIR'],args['--target'],args['--keep-structure'])
+    print("Operation Complete.",flush=True)
+    exit()    
 
 if __name__ == "__main__":
-    main(docopt(__doc__, version='ext-sort v.0.1'))
-    print("Operation Complete.",flush=True)
-    exit()
+    try:
+        main(docopt(__doc__, version='ext-sort v.0.3'))
+    except KeyboardInterrupt:
+        print("\nOperation Terminated.",flush=True)
