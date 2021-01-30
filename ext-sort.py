@@ -22,16 +22,16 @@ Options:
 
 """
 
+__VERSION__ = 0.3
+
 #
 # TODO:
 #
 #
-
+import argparse
 import os
 import shutil
-from typing import Dict, Iterable, Container, List
-
-from docopt import docopt
+from typing import Dict, Iterable, Container
 
 
 def diff_path(file_dir, scan_dir):
@@ -40,16 +40,16 @@ def diff_path(file_dir, scan_dir):
 
 def splash(args: Dict) -> None:
     print(f"""Folders to scan: {", ".join(args['SCAN-DIR'])} 
-Extension(s): {args['--extension']}
-Target: {args['--target']}
-Recursive Mode: {('On' if args['--recursive'] else 'Off')}
-Keep File Structure: {args['--keep-structure']}""", flush=True)
+Extension(s): {args['extension']}
+Target: {args['target']}
+Recursive Mode: {('On' if args['recursive'] else 'Off')}
+Keep File Structure: {args['keep_structure']}""", flush=True)
 
 
 def get_filelist(paths: Iterable, exts: Container, recurse: bool) -> Dict:
     retlist = dict()
     for path in paths:
-        print(f"Scanning {path}", end="...", flush=True)
+        print(f"Scanning {path}", end="... ", flush=True)
         retlist[path] = []
         abspath = os.path.abspath(path)
         if not recurse:
@@ -74,7 +74,7 @@ def get_filelist(paths: Iterable, exts: Container, recurse: bool) -> Dict:
 
 
 def move_files(filelist: Dict, sources: Iterable, destination: str, keep_structure: bool) -> None:
-    print(f"Moving files to {destination}", end="...\n", flush=True)
+    print(f"Moving files to {destination}", end="... ", flush=True)
     for source in sources:
         for path in filelist[source]:
             if keep_structure:
@@ -114,7 +114,7 @@ def yn_prompt(prompt: str) -> bool:
     while True:
         try:
             answer = input(f"{prompt} (y/[n]) ")
-            if answer[0] == 'y' or answer[0] == 'n':
+            if answer[0] in ('y', 'n'):
                 return answer[0] == 'y'
             else:
                 raise ValueError
@@ -124,19 +124,36 @@ def yn_prompt(prompt: str) -> bool:
             return False
 
 
-def main(args: Dict):
-    splash(args)
-    filelist = get_filelist(args['SCAN-DIR'], args['--extension'].split(','), args['--recursive'])
+def main(arguments: Dict):
+    splash(arguments)
+    filelist = get_filelist(arguments['SCAN-DIR'], arguments['extension'], arguments['recursive'])
     if count_files(filelist):
-        if not args['--cron']:
-            if yn_prompt(f"Do you wish to move the files to {args['--target']}?"):
-                move_files(filelist, args['SCAN-DIR'], args['--target'], args['--keep-structure'])
+        if not arguments['cron']:
+            if yn_prompt(f"Do you wish to move the files to {arguments['target']}?"):
+                move_files(filelist, arguments['SCAN-DIR'], arguments['target'], arguments['keep_structure'])
     print("Operation Complete.", flush=True)
     exit(0)
 
 
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description='A utility that sorts files based on their extension')
+
+    parser.add_argument('SCAN-DIR', type=str, nargs='+', help='Directories to be scanned', action='store')
+    parser.add_argument('-t', '--target', help='Directory to copy files into', required=True)
+    parser.add_argument('-x', '--extension', type=str, nargs='+', help='extension(s) of the files to move', required=True)
+    parser.add_argument('-r', '--recursive', action='store_true', help='Scan recursively')
+    parser.add_argument('-k', '--keep-structure', action='store_true', help='Retains directory structure when moving')
+    parser.add_argument('-c', '--cron', action='store_true', help='Used when ext-sort.py is run on a schedule, assumes yes to prompts')
+    parser.add_argument('--version', action='store_true', help='Show version info')
+
+    args = parser.parse_args()
+
+    if args.version:
+        print(f'Version is: {__VERSION__}')
+        exit(0)
+
     try:
-        main(docopt(__doc__, version='ext-sort.py v.0.3'))
+        main(vars(args))
     except KeyboardInterrupt:
         print("\nOperation Terminated.", flush=True)

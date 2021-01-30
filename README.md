@@ -3,8 +3,6 @@ A utility that moves files to a specified directory based on their extension
 v.0.1  
 2020 by radicalarchivist  
 
-### Setup
-    $ pip install -r requirements.txt
 
 ### Usage
     ext-sort.py [-ckr] -x EXTENSION -t TARGET-DIR SCAN-DIR... 
@@ -26,10 +24,10 @@ v.0.1
 Move video files to /home/user/Videos  
 
     # *nix/Mac
-    $ ext-sort.py -x mp4,mov,avi,mkv -t /home/user/Videos /some/source/directory 
+    $ ext-sort.py -x mp4 mov avi mkv -t /home/user/Videos /some/source/directory 
 
     # Windows
-    C:\ext-sort.py path> C:\Path\to\Python.exe ext-sort.py -x mp4,mov,avi,mkv -t C:\home\user\Videos C:\some\source\directory C:\home\user\Videos
+    C:\ext-sort.py path> C:\Path\to\Python.exe ext-sort.py -x mp4 mov avi mkv -t C:\home\user\Videos C:\some\source\directory C:\home\user\Videos
 
 Move gifs recursively to /home/user/Pictures/gifs  
 
@@ -42,10 +40,10 @@ Move gifs recursively to /home/user/Pictures/gifs
 Move video files recursively to /home/user/Videos and keep the file structure  
 
     # *nix/Mac
-    $ ext-sort.py -kr -x mp4,mov,avi,mkv -t /home/user/Videos /some/source/directory 
+    $ ext-sort.py -kr -x mp4 mov avi mkv -t /home/user/Videos /some/source/directory 
 
     # Windows
-    C:\ext-sort.py path> C:\Path\to\Python.exe ext-sort.py -kr -x mp4,mov,avi,mkv -t C:\home\user\Videos C:\some\source\directory 
+    C:\ext-sort.py path> C:\Path\to\Python.exe ext-sort.py -kr -x mp4 mov avi mkv -t C:\home\user\Videos C:\some\source\directory 
 
 ### Support RadicalArchivist
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/N4N53F7TD)
